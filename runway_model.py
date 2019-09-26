@@ -34,13 +34,13 @@ def setup(opts):
     net = caffe.Net(opts['prototxt'], opts['caffemodel'], caffe.TEST)
     return net
 
-inputs = {"input_image" : runway.image, "masked_image" : runway.image}
+input = {"input_image" : runway.image, "masked_image" : runway.image}
 #mask =  {"masked_image" : runway.image}
-outputs = {"harmonized_image" : runway.image}
+output = {"harmonized_image" : runway.image}
 
 size = np.array([512,512])
 
-@runway.command('Harmonize Image', inputs=inputs, outputs=outputs, description="Harmonize Image")
+@runway.command('Harmonize Image', input=input, output=output, description="Harmonize Image")
 def harmonize_image(net, input):
     im_ori = Image.open(input["input_image"])
     im = im_ori.resize(size, Image.BICUBIC)
@@ -88,10 +88,7 @@ def harmonize_image(net, input):
     if im.shape[2] == 4:
        im = im[:,:,0:3]
 
-    #end = path_.find('.')
-    result_all = np.concatenate((im, result), axis = 1)
-    result_all = Image.fromarray(result_all)
-    return result_all
+    return result
 
 if __name__ == "main":
     runway.run()
