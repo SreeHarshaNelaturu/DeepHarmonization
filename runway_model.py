@@ -92,3 +92,6 @@ def harmonize_image(net, input):
     result_all = np.concatenate((im, result), axis = 1)
     result_all = Image.fromarray(result_all)
     return result_all
+
+if __name__ == "main":
+    runway.run
