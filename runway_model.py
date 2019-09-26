@@ -94,4 +94,4 @@ def harmonize_image(net, input):
     return result_all
 
 if __name__ == "main":
-    runway.run
+    runway.run()
