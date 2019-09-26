@@ -3,31 +3,9 @@ import numpy as np
 from PIL import Image
 import os
 import runway
-#import tensorflow as tf
-"""
-# result folder
-#folder_name = 'result/'
-#if os.path.isdir(folder_name):
-#  pass
-#else:
-#  os.makedirs(folder_name)
 
-# load test image list
-#filename = 'data/list.txt'
-#with open(filename, 'r') as f:
-#  path_src = [line.rstrip() for line in f.readlines()]
 
-# set up caffe
-#caffe.set_device(0)
-#caffe.set_mode_gpu()
-"""
-#if tf.test.is_gpu_available():
-#    print("Using GPU")
-#    caffe.set_mode_gpu()
-#else:
-#    print("Using CPU")
 caffe.set_mode_cpu()
-# load net
 
 @runway.setup(options={'prototxt': runway.file(extension='.prototxt'),'caffemodel' : runway.file(extension='.caffemodel')})
 def setup(opts):
@@ -42,6 +20,7 @@ size = np.array([512,512])
 
 @runway.command('Harmonize Image', inputs=input, outputs=output, description="Harmonize Image")
 def harmonize_image(net, input):
+    print("Started the process")
     im_ori = Image.open(input["input_image"])
     im = im_ori.resize(size, Image.BICUBIC)
     im = np.array(im, dtype=np.float32)
@@ -60,7 +39,7 @@ def harmonize_image(net, input):
 
     mask -= 128.0
     mask = mask[np.newaxis, ...]
-
+    print("Mask")
     # shape for input (data blob is N x C x H x W), set data
     net.blobs['data'].reshape(1, *im.shape)
     net.blobs['data'].data[...] = im
@@ -80,6 +59,7 @@ def harmonize_image(net, input):
     pos_idx = out > 255.0
     out[pos_idx] = 255.0
     # save result
+    print("Inference Complete, saving model")
     result = out.astype(np.uint8)
     result = Image.fromarray(result)
 
@@ -87,7 +67,7 @@ def harmonize_image(net, input):
     im = np.array(im, dtype=np.uint8)
     if im.shape[2] == 4:
        im = im[:,:,0:3]
-
+    print("Its done")
     return result
 
 if __name__ == "main":
