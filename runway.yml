@@ -5,5 +5,5 @@ spec:
   gpu: False
   cpu: True
 build_steps:
-  - conda install caffe-cpu
+  - conda install -c willyd caffe-cpu
   - pip install -r requirements.txt
