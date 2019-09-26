@@ -40,7 +40,7 @@ output = {"harmonized_image" : runway.image}
 
 size = np.array([512,512])
 
-@runway.command('Harmonize Image', input=input, output=output, description="Harmonize Image")
+@runway.command('Harmonize Image', inputs=input, outputs=output, description="Harmonize Image")
 def harmonize_image(net, input):
     im_ori = Image.open(input["input_image"])
     im = im_ori.resize(size, Image.BICUBIC)
