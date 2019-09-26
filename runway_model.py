@@ -19,7 +19,7 @@ size = np.array([512,512])
 
 @runway.command('Harmonize Image', inputs=input, outputs=output, description="Harmonize Image")
 def harmonize_image(net, input):
-    im_ori = Image.open(input["input_image"])
+    im_ori = input["input_image"]
     im = im_ori.resize(size, Image.BICUBIC)
     im = np.array(im, dtype=np.float32)
     if im.shape[2] == 4:
@@ -29,7 +29,7 @@ def harmonize_image(net, input):
     im -= np.array((104.00699, 116.66877, 122.67892))
     im = im.transpose((2,0,1))
 
-    mask = Image.open(input["masked_image"])
+    mask = input["masked_image"]
     mask = mask.resize(size, Image.BICUBIC)
     mask = np.array(mask, dtype=np.float32)
     if len(mask.shape) == 3:
