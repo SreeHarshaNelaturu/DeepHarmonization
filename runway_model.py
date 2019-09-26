@@ -1,7 +1,6 @@
 import caffe
 import numpy as np
 from PIL import Image
-import os
 import runway
 
 
@@ -12,15 +11,14 @@ def setup(opts):
     net = caffe.Net(opts['prototxt'], opts['caffemodel'], caffe.TEST)
     return net
 
+
 input = {"input_image" : runway.image, "masked_image" : runway.image}
-#mask =  {"masked_image" : runway.image}
 output = {"harmonized_image" : runway.image}
 
 size = np.array([512,512])
 
 @runway.command('Harmonize Image', inputs=input, outputs=output, description="Harmonize Image")
 def harmonize_image(net, input):
-    print("Started the process")
     im_ori = Image.open(input["input_image"])
     im = im_ori.resize(size, Image.BICUBIC)
     im = np.array(im, dtype=np.float32)
@@ -44,6 +42,7 @@ def harmonize_image(net, input):
     net.blobs['data'].reshape(1, *im.shape)
     net.blobs['data'].data[...] = im
 
+
     net.blobs['mask'].reshape(1, *mask.shape)
     net.blobs['mask'].data[...] = mask
 
@@ -59,16 +58,11 @@ def harmonize_image(net, input):
     pos_idx = out > 255.0
     out[pos_idx] = 255.0
     # save result
-    print("Inference Complete, saving model")
+
     result = out.astype(np.uint8)
     result = Image.fromarray(result)
 
-    im = im_ori.resize(size, Image.BICUBIC)
-    im = np.array(im, dtype=np.uint8)
-    if im.shape[2] == 4:
-       im = im[:,:,0:3]
-    print("Its done")
     return result
 
-if __name__ == "main":
+if __name__ == "__main__":
     runway.run()
