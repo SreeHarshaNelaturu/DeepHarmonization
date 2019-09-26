@@ -3,8 +3,7 @@ import numpy as np
 from PIL import Image
 import runway
 
-
-caffe.set_mode_cpu()
+#caffe.set_mode_cpu()
 
 @runway.setup(options={'prototxt': runway.file(extension='.prototxt'),'caffemodel' : runway.file(extension='.caffemodel')})
 def setup(opts):
